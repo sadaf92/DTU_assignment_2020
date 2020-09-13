@@ -30,7 +30,16 @@ def get_data(prox_pth, orth_pth):
     
     return data, targets
 
-#%%
+def plot_bo(f, bo):
+    x = np.linspace(0.00001, 1.5, 10000)
+    mean, sigma = bo._gp.predict(x.reshape(-1, 1), return_std=True)
+    
+    plt.figure(figsize=(16, 9))
+    plt.plot(x, mean)
+    plt.fill_between(x, mean + sigma, mean - sigma, alpha=0.1)
+    plt.scatter(bo.space.params.flatten(), bo.space.target, c="red", s=50, zorder=10)
+    plt.show()
+
 def mlp_cv(lr_init, data, targets, n_fold=4):
     """ Utilizing multi-layer perceptron (MLP) accompanied with
     cross validation to optimize the satellite regression.
