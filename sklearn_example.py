@@ -34,12 +34,15 @@ def get_data(prox_pth, orth_pth):
 def mlp_cv(lr_init, data, targets, n_fold=4):
     """ Utilizing multi-layer perceptron (MLP) accompanied with
     cross validation to optimize the satellite regression.
+    Here, initial learning rate value is the only parameter that
+    I consider for optimization.
     
     lr_init: the initial learning rate which is selected to be optimized
     data   : RGB-N from the satellite imagery
     targets: proximal grass ratio from rgb images
     """
-    estimator = MLP(learning_rate_init=lr_init, random_state=2)
+    estimator = MLP(learning_rate_init=lr_init, activation='relu', solver='adam', alpha=1e-5, batch_size=batch_size, max_iter = 1000, warm_start=True, 
+                       learning_rate='adaptive', tol=5*1e-6, random_state=40)
     cval = cross_val_score(estimator, data, targets, cv=n_fold)
     return cval.mean()
 
